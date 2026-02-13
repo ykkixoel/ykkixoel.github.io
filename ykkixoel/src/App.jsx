@@ -1,25 +1,56 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const FloatingHearts = React.memo(() => {
+  // We create the heart data ONCE and never change it
+  const heartData = React.useMemo(() =>
+    Array.from({ length: 15 }).map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      duration: Math.random() * 3 + 5,
+      delay: Math.random() * 5,
+      size: Math.random() * 20 + 10
+    })), []);
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zindex: 0 }}>
+      {heartData.map((h) => (
+        <div
+          key={h.id}
+          className="heart"
+          style={{
+            left: `${h.left}%`,
+            top: '0',
+            animationDuration: `${h.duration}s`,
+            animationDelay: `${h.delay}s`,
+            fontSize: `${h.size}px`,
+            opacity: 0,
+            animationFillMode: 'both'
+          }}
+        >
+          ❤️
+        </div>
+      ))}
+    </div>
+  );
+});
+
+const BottomWave = React.memo(() => (
+  <div className="wave-container">
+    <svg className="wave-svg wave-layer-1" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.41,133,121.11,210.33,101.52,273,85.64,303,71.07,321.39,56.44Z"></path>
+    </svg>
+    <svg className="wave-svg wave-layer-2" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.41,133,121.11,210.33,101.52,273,85.64,303,71.07,321.39,56.44Z"></path>
+    </svg>
+  </div>
+));
+
 const App = () => {
   const [step, setStep] = useState(0);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [loading, setLoading] = useState(true);
 
   const startDate = new Date(2026, 0, 14);
-
-  const BottomWave = () => (
-    <div className="wave-container">
-      {/* Layer 1: The back wave */}
-      <svg className="wave-svg wave-layer-1" viewBox="0 0 1200 120" preserveAspectRatio="none">
-        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.41,133,121.11,210.33,101.52,273,85.64,303,71.07,321.39,56.44Z"></path>
-      </svg>
-
-      {/* Layer 2: The front wave */}
-      <svg className="wave-svg wave-layer-2" viewBox="0 0 1200 120" preserveAspectRatio="none">
-        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.41,133,121.11,210.33,101.52,273,85.64,303,71.07,321.39,56.44Z"></path>
-      </svg>
-    </div>
-  );
 
   const LoadingScreen = () => (
     <div className="loading-screen">
@@ -28,30 +59,7 @@ const App = () => {
     </div>
   );
 
-  const FloatingHearts = () => {
-    const hearts = Array.from({ length: 15 }); // Number of hearts
-    return (
-      <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-        {hearts.map((_, i) => (
-          <div
-            key={i}
-            className="heart"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: '0', // Anchor to top so translateY handles the movement relative to the screen
-              animationDuration: `${Math.random() * 3 + 5}s`,
-              animationDelay: `${Math.random() * 5}s`,
-              fontSize: `${Math.random() * 20 + 10}px`,
-              opacity: 0, // Start invisible
-              animationFillMode: 'both'
-            }}
-          >
-            ❤️
-          </div>
-        ))}
-      </div>
-    );
-  };
+
 
   useEffect(() => {
     // This runs once when the app starts
