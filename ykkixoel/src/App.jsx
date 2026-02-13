@@ -2,10 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const App = () => {
   const [step, setStep] = useState(0);
-  const [daysTogether, setDaysTogether] = useState(0);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [loading, setLoading] = useState(true);
 
-  // Set your anniversary here (Year, Month Index 0-11, Day)
   const startDate = new Date(2026, 0, 14);
+
+  const BottomWave = () => (
+    <div className="wave-container">
+      {/* Layer 1: The back wave */}
+      <svg className="wave-svg wave-layer-1" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.41,133,121.11,210.33,101.52,273,85.64,303,71.07,321.39,56.44Z"></path>
+      </svg>
+
+      {/* Layer 2: The front wave */}
+      <svg className="wave-svg wave-layer-2" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.41,133,121.11,210.33,101.52,273,85.64,303,71.07,321.39,56.44Z"></path>
+      </svg>
+    </div>
+  );
+
+  const LoadingScreen = () => (
+    <div className="loading-screen">
+      <div className="envelope-icon">💌</div>
+      <div className="loading-text">For ykki only...</div>
+    </div>
+  );
 
   const FloatingHearts = () => {
     const hearts = Array.from({ length: 15 }); // Number of hearts
@@ -33,9 +54,34 @@ const App = () => {
   };
 
   useEffect(() => {
-    const today = new Date();
-    const diff = today - startDate;
-    setDaysTogether(Math.floor(diff / (1000 * 60 * 60 * 24)));
+    // This runs once when the app starts
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3900);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+
+
+  useEffect(() => {
+
+    // Live counter for the relationship
+    const interval = setInterval(() => {
+      const now = new Date();
+      const diff = now - startDate;
+
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / 1000 / 60) % 60),
+        seconds: Math.floor((diff / 1000) % 60)
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const nextStep = () => {
@@ -52,11 +98,26 @@ const App = () => {
       <p style={styles.tapHint}>[ Tap anywhere to continue ]</p>
     </div>,
 
-    // 2. Days together
+    // 2. Time together (Updated)
     <div key="1" className="fade-in" style={styles.content}>
-      <p>We have been together for</p>
-      <div style={styles.daysCount}>{daysTogether}</div>
-      <p>days hehe</p>
+      <p style={{ marginBottom: '20px' }}>We have been together for</p>
+      <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', alignItems: 'baseline' }}>
+        <div>
+          <div style={styles.daysCount}>{timeLeft.days}</div>
+          <p style={{ fontSize: '0.8rem', color: '#ff6b6b' }}>DAYS</p>
+        </div>
+        <div style={styles.timeDivider}>:</div>
+        <div>
+          <div style={{ ...styles.daysCount, fontSize: '2.5rem' }}>{timeLeft.hours}</div>
+          <p style={{ fontSize: '0.8rem', color: '#ff6b6b' }}>HRS</p>
+        </div>
+        <div style={styles.timeDivider}>:</div>
+        <div>
+          <div style={{ ...styles.daysCount, fontSize: '2.5rem' }}>{timeLeft.minutes}</div>
+          <p style={{ fontSize: '0.8rem', color: '#ff6b6b' }}>MINS</p>
+        </div>
+      </div>
+      <p style={{ marginTop: '20px' }}>...and {timeLeft.seconds}s of pure happiness</p>
     </div>,
 
     // 3. First met
@@ -134,24 +195,78 @@ const App = () => {
 
     // 5. Letter
     <div key="8" className="fade-in" style={styles.content}>
-      <div style={styles.letter}>
-        <p>To more days together,</p>
-        <p>My pookie,</p>
-        <p>
-          I wanted to make this little space just for us.
-          I pray that we will grow stay togehter for long long hehe.
-          Thank you for being the highlight of every single day hehe.
-          I know I am bad at expressing myself... but
-          I love you more than words can say. 👉👈
-        </p>
-        <p style={{ marginTop: '20px' }}>爱你哟,</p>
-        <p><strong>oel</strong></p>
+      <div className="letter-wrapper">
+        {/* This is the picture tucked behind */}
+        <img
+          src={new URL('./assets/hold.jpg', import.meta.url).href}
+          alt="memory"
+          className="tucked-photo"
+        />
+        <div style={styles.letter}>
+          <p>To more days together,</p>
+          <p>My pookie,</p>
+          <p>
+            I wanted to make this little space just for us.
+            I pray that we will grow and stay togehter for long long time hehe.
+            Thank you for being the highlight of every single day.
+            I know I am bad at expressing myself... but
+            I love you more than words can say. 👉👈
+            <br />
+            <br />
+            p.s. hope you are happy with this year's valentine...
+          </p>
+          <br />
+          <p style={{ marginTop: '20px' }}>爱你哟,</p>
+          <p><strong>oel</strong></p>
+        </div>
       </div>
       <button onClick={(e) => { e.stopPropagation(); setStep(0); }} style={styles.resetBtn}>
         See it again? ❤️
       </button>
     </div>
   ];
+
+  if (loading) {
+    return (
+      <>
+        <style>{`
+          @keyframes envelopePulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(255, 107, 107, 0)); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.4)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(255, 107, 107, 0)); }
+          }
+
+          .loading-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff9f9;
+            z-index: 9999; /* Ensure it's on top of everything */
+            transition: opacity 0.8s ease;
+          }
+
+          .envelope-icon {
+            font-size: 80px;
+            animation: envelopePulse 1.5s ease-in-out infinite;
+            display: inline-block;
+            margin-bottom: 20px;
+          }
+
+          .loading-text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ff6b6b;
+            font-weight: 500;
+            letter-spacing: 2px;
+            opacity: 0.8;
+          }
+        `}</style>
+        <LoadingScreen />
+      </>
+    );
+  }
 
   return (
     <>
@@ -191,11 +306,114 @@ const App = () => {
             z-index: 0;
             animation: float linear infinite;
           }
+          @keyframes moveWave {
+            0% { transform: translateX(-40%); }
+            50% { transform: translateX(-20%); }
+            100% { transform: translateX(-40%); }
+          }
+
+          @keyframes moveWaveSpare {
+            0% { transform: translateX(-15%); }
+            50% { transform: translateX(0%); }
+            100% { transform: translateX(-15%); }
+          }
+
+          .wave-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px; /* Increased height to accommodate layers */
+            overflow: hidden;
+            line-height: 0;
+            z-index: 1;
+            pointer-events: none;
+          }
+
+          .wave-svg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 250%; /* Extra width for movement */
+            height: 60px;
+          }
+
+          .wave-layer-1 {
+            animation: moveWave 12s ease-in-out infinite;
+            fill: #ffafbd;
+            opacity: 0.3; /* Lighter background layer */
+          }
+
+          .wave-layer-2 {
+            animation: moveWaveSpare 8s ease-in-out infinite;
+            fill: #ffafbd;
+            opacity: 0.6; /* Darker foreground layer */
+            height: 50px; /* Slightly shorter to show layer behind */
+          }
+          @keyframes envelopePulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(255, 107, 107, 0)); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.4)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(255, 107, 107, 0)); }
+          }
+
+          .loading-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff9f9;
+            z-index: 9999; /* Ensure it's on top of everything */
+            transition: opacity 0.8s ease;
+          }
+
+          .envelope-icon {
+            font-size: 80px;
+            animation: envelopePulse 1.5s ease-in-out infinite;
+            display: inline-block;
+            margin-bottom: 20px;
+          }
+
+          .loading-text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ff6b6b;
+            font-weight: 500;
+            letter-spacing: 2px;
+            opacity: 0.8;
+          }
+          timeDivider: {
+            fontSize: '2rem',
+            fontWeight: 'bold',
+            color: '#ff6b6b',
+            paddingBottom: '25px'
+          },
+          .letter-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            margin-top: 20px;
+          }
+
+          .tucked-photo {
+            position: absolute;
+            bottom: -50px; /* Moves it up a bit */
+            right: -20px; /* Moves it to the left */
+            width: 150px;
+            height: auto;
+            padding: 8px 8px 25px 8px; /* Polaroid style: extra space at bottom */
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transform: rotate(15deg); /* That cool tilted look */
+            z-index: 100; /* Puts it BEHIND the letter */
+            border-radius: 2px;
+          }
         `}
       </style>
       <div style={styles.body} onClick={nextStep}>
         <div style={styles.container}>
           <FloatingHearts />
+          <BottomWave />
           <div style={styles.progressContainer}>
             <div style={{ ...styles.progressBar, width: `${((step + 1) / sections.length) * 100}%` }}></div>
           </div>
@@ -313,7 +531,7 @@ const styles = {
   revealedContent: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff0f0', borderRadius: '15px' },
   canvas: { position: 'absolute', top: 0, left: 0, borderRadius: '15px' },
   letter: { textAlign: 'left', padding: '25px', backgroundColor: '#fff9f9', borderRadius: '15px', borderLeft: '5px solid #ff6b6b', fontStyle: 'italic', lineHeight: '1.7', color: '#444' },
-  resetBtn: { marginTop: '30px', border: 'none', background: 'none', color: '#ff6b6b', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.9rem' }
+  resetBtn: { marginTop: '30px', marginRight: '130px', border: 'none', background: 'none', color: '#ff6b6b', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.9rem' }
 
 };
 
