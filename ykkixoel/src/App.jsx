@@ -5,7 +5,32 @@ const App = () => {
   const [daysTogether, setDaysTogether] = useState(0);
 
   // Set your anniversary here (Year, Month Index 0-11, Day)
-  const startDate = new Date(2023, 5, 15);
+  const startDate = new Date(2026, 0, 14);
+
+  const FloatingHearts = () => {
+    const hearts = Array.from({ length: 15 }); // Number of hearts
+    return (
+      <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        {hearts.map((_, i) => (
+          <div
+            key={i}
+            className="heart"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: '0', // Anchor to top so translateY handles the movement relative to the screen
+              animationDuration: `${Math.random() * 3 + 5}s`,
+              animationDelay: `${Math.random() * 5}s`,
+              fontSize: `${Math.random() * 20 + 10}px`,
+              opacity: 0, // Start invisible
+              animationFillMode: 'both'
+            }}
+          >
+            ❤️
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   useEffect(() => {
     const today = new Date();
@@ -29,7 +54,7 @@ const App = () => {
     <div key="1" className="fade-in" style={styles.content}>
       <p>We have been together for</p>
       <div style={styles.daysCount}>{daysTogether}</div>
-      <p>beautiful days</p>
+      <p>days hehe</p>
     </div>,
 
     // 3. First met
@@ -49,7 +74,6 @@ const App = () => {
     <div key="3" className="fade-in" style={styles.content} onClick={(e) => e.stopPropagation()}>
       <h3 style={styles.heading}>Scratch for a surprise</h3>
       <ScratchCard />
-      {/* FIXED: Merged styles into one object */}
       <p
         onClick={() => setStep(step + 1)}
         style={{ ...styles.tapHint, marginTop: '20px', cursor: 'pointer', opacity: 1, color: '#ff6b6b', fontWeight: 'bold' }}
@@ -81,6 +105,19 @@ const App = () => {
     <>
       <style>
         {`
+         html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevents scrolling */
+            position: fixed; /* Extra lock for mobile */
+            touch-action: none; /* Disables pull-to-refresh and scroll gestures */
+          }
+          #root {
+            width: 100%;
+            height: 100%;
+          }
           @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -88,10 +125,25 @@ const App = () => {
           .fade-in {
             animation: fadeIn 0.8s ease-out forwards;
           }
+          @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+          }
+          .heart {
+            position: absolute;
+            color: #ff6b6b;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 0;
+            animation: float linear infinite;
+          }
         `}
       </style>
       <div style={styles.body} onClick={nextStep}>
         <div style={styles.container}>
+          <FloatingHearts />
           <div style={styles.progressContainer}>
             <div style={{ ...styles.progressBar, width: `${((step + 1) / sections.length) * 100}%` }}></div>
           </div>
@@ -142,6 +194,17 @@ const ScratchCard = () => {
 };
 
 const styles = {
+  root: {
+    margin: 0,
+    padding: 0,
+  },
+  html: {
+    margin: 0,
+    padding: 0,
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+  },
   body: {
     backgroundColor: '#ffafbd',
     backgroundImage: 'linear-gradient(to bottom, #ffafbd, #ffc3a0)',
@@ -151,6 +214,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     margin: 0,
+    padding: 0,
     overflow: 'hidden',
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     cursor: 'pointer'
@@ -158,7 +222,7 @@ const styles = {
   container: {
     width: '100%',
     maxWidth: '450px',
-    height: '100vh',
+    height: '100%', // Use 100% of the body's height
     backgroundColor: 'white',
     position: 'relative',
     display: 'flex',
@@ -166,7 +230,9 @@ const styles = {
     justifyContent: 'center',
     padding: '20px',
     boxSizing: 'border-box',
-    boxShadow: '0 0 50px rgba(0,0,0,0.1)'
+
+    boxShadow: '0 0 50px rgba(0,0,0,0.1)',
+    margin: 0,
   },
   progressContainer: {
     position: 'absolute',
@@ -196,6 +262,7 @@ const styles = {
   canvas: { position: 'absolute', top: 0, left: 0, borderRadius: '15px' },
   letter: { textAlign: 'left', padding: '25px', backgroundColor: '#fff9f9', borderRadius: '15px', borderLeft: '5px solid #ff6b6b', fontStyle: 'italic', lineHeight: '1.7', color: '#444' },
   resetBtn: { marginTop: '30px', border: 'none', background: 'none', color: '#ff6b6b', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.9rem' }
+
 };
 
 export default App;
