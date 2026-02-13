@@ -39,13 +39,15 @@ const App = () => {
   }, []);
 
   const nextStep = () => {
-    if (step < 4) setStep(step + 1);
+    if (step < sections.length - 1) {
+      setStep(step + 1);
+    }
   };
 
   const sections = [
     // 1. Hey there
     <div key="0" className="fade-in" style={styles.content}>
-      <h1 style={styles.title}>Hey there, 👋</h1>
+      <h1 style={styles.title}>Hiii, 👋</h1>
       <p style={styles.subtitle}>You are my fav person in the whole world.</p>
       <p style={styles.tapHint}>[ Tap anywhere to continue ]</p>
     </div>,
@@ -59,20 +61,68 @@ const App = () => {
 
     // 3. First met
     <div key="2" className="fade-in" style={styles.content}>
-      <h3 style={styles.heading}>First met hehe...</h3>
+      <h3 style={styles.heading}>first pic of us...</h3>
       <div style={styles.photoFrame}>
         <img
-          src="https://via.placeholder.com/400x500"
+          src={new URL('./assets/first.jpg', import.meta.url).href}
           alt="Our first meeting"
           style={styles.image}
         />
       </div>
-      <p style={styles.caption}>I knew you were special since day one. ❤️</p>
+      <p style={styles.caption}>I know we've been together for only a short while</p>
+    </div>,
+
+    <div key="3" className="fade-in" style={styles.content}>
+      <h3 style={styles.heading}>my favourite pic so far</h3>
+      <div style={styles.photoFrame}>
+        <img
+          src={new URL('./assets/fav2.jpg', import.meta.url).href}
+          alt="Our first meeting"
+          style={styles.image}
+        />
+      </div>
+      <p style={styles.caption}>we look so cute together hehe</p>
+    </div>,
+
+    <div key="4" className="fade-in" style={styles.content}>
+      <h3 style={styles.heading}>oh this one is really good too</h3>
+      <div style={styles.photoFrame}>
+        <img
+          src={new URL('./assets/fav.jpg', import.meta.url).href}
+          alt="Our first meeting"
+          style={styles.image}
+        />
+      </div>
+      <p style={styles.caption}>lets get more cute pics togetherrr</p>
+    </div>,
+
+    <div key="5" className="fade-in" style={styles.content}>
+      <h3 style={styles.heading}>and also lets go eat this again</h3>
+      <div style={styles.photoFrame}>
+        <img
+          src={new URL('./assets/mealfav.jpg', import.meta.url).href}
+          alt="Our first meeting"
+          style={styles.image}
+        />
+      </div>
+      <p style={styles.caption}>love going out to eat with u hehe</p>
+    </div>,
+
+    <div key="6" className="fade-in" style={styles.content}>
+      <h3 style={styles.heading}>and... lets stick with 小辣...</h3>
+      <div style={styles.photoFrame}>
+        <img
+          src={new URL('./assets/favmeal2.jpg', import.meta.url).href}
+          alt="Our first meeting"
+          style={styles.image}
+        />
+      </div>
+      <p style={styles.caption}>idw my ass to burn again dawg</p>
     </div>,
 
     // 4. Scratch photo
-    <div key="3" className="fade-in" style={styles.content} onClick={(e) => e.stopPropagation()}>
-      <h3 style={styles.heading}>Scratch for a surprise</h3>
+    <div key="7" className="fade-in" style={styles.content} onClick={(e) => e.stopPropagation()}>
+      <h3 style={styles.heading}>Scratch for something</h3>
       <ScratchCard />
       <p
         onClick={() => setStep(step + 1)}
@@ -83,17 +133,19 @@ const App = () => {
     </div>,
 
     // 5. Letter
-    <div key="4" className="fade-in" style={styles.content}>
+    <div key="8" className="fade-in" style={styles.content}>
       <div style={styles.letter}>
         <p>To more days together,</p>
-        <p>My dearest,</p>
+        <p>My pookie,</p>
         <p>
           I wanted to make this little space just for us.
-          Thank you for being the highlight of every single day.
-          I love you more than words can say.
+          I pray that we will grow stay togehter for long long hehe.
+          Thank you for being the highlight of every single day hehe.
+          I know I am bad at expressing myself... but
+          I love you more than words can say. 👉👈
         </p>
-        <p style={{ marginTop: '20px' }}>Love always,</p>
-        <p><strong>[Your Name]</strong></p>
+        <p style={{ marginTop: '20px' }}>爱你哟,</p>
+        <p><strong>oel</strong></p>
       </div>
       <button onClick={(e) => { e.stopPropagation(); setStep(0); }} style={styles.resetBtn}>
         See it again? ❤️
@@ -186,7 +238,7 @@ const ScratchCard = () => {
     <div style={styles.scratchContainer}>
       <div style={styles.revealedContent}>
         <span style={{ fontSize: '3.5rem' }}>💌</span>
-        <p style={{ fontWeight: 'bold', color: '#ff6b6b' }}>I'm so lucky to have you!</p>
+        <p style={{ fontWeight: 'bold', color: '#ff6b6b' }}>I'm so lucky to have you bb!</p>
       </div>
       <canvas ref={canvasRef} width={300} height={200} style={styles.canvas} />
     </div>
