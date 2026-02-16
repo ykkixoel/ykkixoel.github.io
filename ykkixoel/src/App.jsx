@@ -102,7 +102,7 @@ const App = () => {
     // 1. Hey there
     <div key="0" className="fade-in" style={styles.content}>
       <h1 style={styles.title}>Hiii, 👋</h1>
-      <p style={styles.subtitle}>You are my fav person in the whole world.</p>
+      {/* <p style={styles.subtitle}>You are my fav person in the whole world.</p> */}
       <p style={styles.tapHint}>[ Tap anywhere to continue ]</p>
     </div>,
 
@@ -211,21 +211,21 @@ const App = () => {
           className="tucked-photo"
         />
         <div style={styles.letter}>
-          <p>To more days together,</p>
-          <p>My pookie,</p>
+          {/* <p>To more days together,</p>
+          <p>My pookie,</p> */}
           <p>
-            I wanted to make this little space just for us.
+            {/* I wanted to make this little space just for us.
             I pray that we will grow and stay togehter for long long time hehe.
             Thank you for being the highlight of every single day.
             I know I am bad at expressing myself... but
-            I love you more than words can say. 👉👈
+            I love you more than words can say. 👉👈 */}
             <br />
             <br />
-            p.s. hope you are happy with this year's valentine...
+            {/* p.s. hope you are happy with this year's valentine... */}
           </p>
           <br />
           <p style={{ marginTop: '20px' }}>爱你哟,</p>
-          <p><strong>oel</strong></p>
+          <p><strong></strong></p>
         </div>
       </div>
       <button onClick={(e) => { e.stopPropagation(); setStep(0); }} style={styles.resetBtn}>
